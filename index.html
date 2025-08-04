@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Performance Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .chart-container:hover {
+            transform: translateY(-5px);
+        }
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .platform-icon {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        .facebook { background: #1877f2; }
+        .instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+        .tiktok { background: #000; }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .summary-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        .summary-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .summary-card .metric {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .growth-positive { color: #4CAF50; }
+        .growth-negative { color: #f44336; }
+        .chart-canvas {
+            max-height: 400px;
+        }
+        .legend-custom {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Social Media Performance Dashboard</h1>
+            <p>Analisis Komprehensif: Facebook, Instagram & TikTok</p>
+            <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-top: 20px; backdrop-filter: blur(10px);">
+                <h2 style="margin: 0 0 10px 0; color: #FFD700;">🔥 PESTA TOMAHAWK PENANG</h2>
+                <p style="margin: 0; font-size: 1.1em;"><strong>31 Julai - 7 Ogos 2025</strong> | Featuring: Awie Kelantan, Lagenda Utara, Minah Petai & Fatin Morat</p>
+                <p style="margin: 5px 0 0 0; font-size: 0.9em; opacity: 0.9;">Budget Pemasaran: RM 13,535.50 | Link Bio Analytics: 3,172 views, 2,508 clicks (79.1%)</p>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <!-- Facebook Views Chart -->
+            <div class="chart-container">
+                <div class="chart-title">
+                    <span class="platform-icon facebook"></span>
+                    Facebook - Total Views (Million)
+                </div>
+                <canvas id="facebookViewsChart" class="chart-canvas"></canvas>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <strong>📊 Data Jumlah Tontonan Facebook:</strong><br>
+                    • Kulai 1.0: <strong>33.7 juta</strong> (Terbaik)<br>
+                    • Kelantan: <strong>24.9 juta</strong> (Kedua)<br>
+                    • Terengganu: <strong>21.7 juta</strong> (Ketiga)<br>
+                    • Kulai 2.0: <strong>12.8 juta</strong> (Perlu diperbaiki)<br>
+                    • Penang Event: <strong>6.8 juta</strong> (Event baru - trending!)<br>
+                    <span style="color: #666;">Total: 99.9 juta tontonan | Purata: 20.0 juta per lokasi</span><br>
+                    <strong style="color: #FF6B35;">🏆 Top Viral Facebook:</strong> 1.8M views | 40.2K likes | 2.6K comments
+                </div>
+            </div>
+
+            <!-- Instagram Views Chart -->
+            <div class="chart-container">
+                <div class="chart-title">
+                    <span class="platform-icon instagram"></span>
+                    Instagram - Total Views (Million)
+                </div>
+                <canvas id="instagramViewsChart" class="chart-canvas"></canvas>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <strong>📊 Data Jumlah Tontonan Instagram:</strong><br>
+                    • Kulai 1.0: <strong>5.23 juta</strong> (39.7% - Dominan)<br>
+                    • Terengganu: <strong>2.58 juta</strong> (19.6% - Kedua)<br>
+                    • Kulai 2.0: <strong>2.48 juta</strong> (18.8% - Ketiga)<br>
+                    • Penang Event: <strong>2.1 juta</strong> (15.9% - Event impact!)<br>
+                    • Kelantan: <strong>1.00 juta</strong> (7.6% - Perlu perhatian)<br>
+                    <span style="color: #666;">Total: 13.39 juta tontonan | Purata: 2.68 juta per lokasi</span><br>
+                    <strong style="color: #E1306C;">🏆 Top Viral Instagram:</strong> 846K views | 14.3K likes | 521 comments
+                </div>
+            </div>
+
+            <!-- TikTok Views Chart -->
+            <div class="chart-container">
+                <div class="chart-title">
+                    <span class="platform-icon tiktok"></span>
+                    TikTok - Total Views (Million)
+                </div>
+                <canvas id="tiktokViewsChart" class="chart-canvas"></canvas>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <strong>📊 Data Jumlah Tontonan TikTok:</strong><br>
+                    • Kulai 1.0: <strong>44 juta</strong> (Terbaik - Pertumbuhan +105%)<br>
+                    • Terengganu: <strong>34 juta</strong> (Kedua - Prestasi kukuh)<br>
+                    • Kelantan: <strong>26 juta</strong> (Ketiga - Penurunan -22%)<br>
+                    • Kulai 2.0: <strong>24 juta</strong> (Keempat - Pertumbuhan +75%)<br>
+                    • Penang Event: <strong>12.5 juta</strong> (Event viral - 2.1M single video!)<br>
+                    <span style="color: #666;">Total: 140.5 juta tontonan | Purata: 28.1 juta per lokasi</span><br>
+                    <strong style="color: #000;">🏆 Top Viral TikTok:</strong> 2.1M views | 86.2K likes | 1.4K comments
+                </div>
+            </div>
+
+            <!-- Cross-Platform Comparison -->
+            <div class="chart-container">
+                <div class="chart-title">
+                    🏆 Cross-Platform Total Reach Comparison
+                </div>
+                <canvas id="crossPlatformChart" class="chart-canvas"></canvas>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <strong>📊 Jumlah Gabungan Semua Platform:</strong><br>
+                    • Kulai 1.0: <strong>82.93 juta</strong> (FB: 33.7 + IG: 5.23 + TT: 44)<br>
+                    • Terengganu: <strong>58.28 juta</strong> (FB: 21.7 + IG: 2.58 + TT: 34)<br>
+                    • Kelantan: <strong>51.9 juta</strong> (FB: 24.9 + IG: 1.0 + TT: 26)<br>
+                    • Kulai 2.0: <strong>39.28 juta</strong> (FB: 12.8 + IG: 2.48 + TT: 24)<br>
+                    • Penang Event: <strong>21.4 juta</strong> (FB: 6.8 + IG: 2.1 + TT: 12.5)<br>
+                    <span style="color: #666;">Total Semua: 253.79 juta tontonan</span><br>
+                    <strong style="color: #FF6B35;">🎪 Penang Event ROI:</strong> RM 13,535 → 21.4M reach = RM 0.63 per 1K views
+                </div>
+            </div>
+
+            <!-- Growth Rates -->
+            <div class="chart-container">
+                <div class="chart-title">
+                    📈 Growth Rates by Platform & Location
+                </div>
+                <canvas id="growthRatesChart" class="chart-canvas"></canvas>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <strong>📊 Kadar Pertumbuhan (%):</strong><br>
+                    <strong>Facebook:</strong> Penang Event (+250%) • Terengganu (+42.2%) • Kulai 1.0 (+10.8%) • Kelantan (-1.0%) • Kulai 2.0 (-37.9%)<br>
+                    <strong>TikTok:</strong> Penang Event (+320%) • Kulai 1.0 (+105%) • Kulai 2.0 (+75%) • Terengganu (+32.4%) • Kelantan (-22%)<br>
+                    <span style="color: #28a745;">🟢 Positif: 7 lokasi</span> | <span style="color: #dc3545;">🔴 Negatif: 3 lokasi</span><br>
+                    <strong style="color: #FF6B35;">🎪 Penang Event:</strong> Menunjukkan pertumbuhan tertinggi dengan viral content strategy!
+                </div>
+            </div>
+
+            <!-- Engagement Rates -->
+            <div class="chart-container">
+                <div class="chart-title">
+                    💬 Engagement Rates Comparison
+                </div>
+                <canvas id="engagementChart" class="chart-canvas"></canvas>
+                <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <strong>📊 Kadar Engagement (%):</strong><br>
+                    <strong>TikTok (Terbaik):</strong> Penang Event (6.2%) • Kulai 2.0 (4.79%) • Kulai 1.0 (4.77%) • Terengganu (4.29%) • Kelantan (4.04%)<br>
+                    <strong>Facebook:</strong> Penang Event (3.85%) • Kelantan (2.10%) • Kulai 2.0 (2.03%) • Kulai 1.0 (1.84%) • Terengganu (1.67%)<br>
+                    <strong>Instagram:</strong> Kulai 2.0 (3.01%) • Penang Event (2.45%) • Kulai 1.0 (1.43%) • Lain-lain (Tiada data)<br>
+                    <span style="color: #666;">Penang Event menunjukkan engagement tertinggi - influencer collaboration berkesan!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h3>🎪 Pesta Tomahawk Impact</h3>
+                <div class="metric">2.1M</div>
+                <p>TikTok viral terbesar dengan 86.2K likes - Pengaruh influencer berkesan!</p>
+            </div>
+            <div class="summary-card">
+                <h3>🥇 Best Overall Performer</h3>
+                <div class="metric">Kulai 1.0</div>
+                <p>Dominan di Facebook & TikTok dengan total reach 82.9M</p>
+            </div>
+            <div class="summary-card">
+                <h3>🚀 Highest Growth</h3>
+                <div class="metric growth-positive">+105%</div>
+                <p>Kulai 1.0 TikTok views growth - explosive performance!</p>
+            </div>
+            <div class="summary-card">
+                <h3>💰 Marketing Budget</h3>
+                <div class="metric">RM 13,535</div>
+                <p>Pesta Tomahawk Penang investment - ROI analysis diperlukan</p>
+            </div>
+            <div class="summary-card">
+                <h3>🔗 Link Performance</h3>
+                <div class="metric">79.1%</div>
+                <p>Click rate Link in Bio - 2,508 clicks dari 3,172 views</p>
+            </div>
+            <div class="summary-card">
+                <h3>⚠️ Needs Attention</h3>
+                <div class="metric growth-negative">-37.9%</div>
+                <p>Kulai 2.0 Facebook decline - immediate action required</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for all charts (Updated with Penang Event)
+        const locations = ['Kulai 1.0', 'Kulai 2.0', 'Kelantan', 'Terengganu', 'Penang Event'];
+        const colors = {
+            'Kulai 1.0': '#4CAF50',
+            'Kulai 2.0': '#FF9800', 
+            'Kelantan': '#2196F3',
+            'Terengganu': '#9C27B0',
+            'Penang Event': '#FF6B35'
+        };
+
+        // Facebook Views Data (with Penang viral content)
+        const facebookData = {
+            'Kulai 1.0': 33.7,
+            'Kulai 2.0': 12.8,
+            'Kelantan': 24.9,
+            'Terengganu': 21.7,
+            'Penang Event': 6.8 // Based on content performance from report
+        };
+
+        // Instagram Views Data (with Penang event content)
+        const instagramData = {
+            'Kulai 1.0': 5.23,
+            'Kulai 2.0': 2.48,
+            'Kelantan': 1.00,
+            'Terengganu': 2.58,
+            'Penang Event': 2.1 // Based on event content
+        };
+
+        // TikTok Views Data (with Penang viral performance)
+        const tiktokData = {
+            'Kulai 1.0': 44,
+            'Kulai 2.0': 24,
+            'Kelantan': 26,
+            'Terengganu': 34,
+            'Penang Event': 12.5 // Based on viral TikTok content from event
+        };
+
+        // Chart.js default config
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.color = '#333';
+
+        // Facebook Views Chart
+        new Chart(document.getElementById('facebookViewsChart'), {
+            type: 'bar',
+            data: {
+                labels: locations,
+                datasets: [{
+                    label: 'Views (Million)',
+                    data: Object.values(facebookData),
+                    backgroundColor: locations.map(loc => colors[loc] + '80'),
+                    borderColor: locations.map(loc => colors[loc]),
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.y}M views`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Instagram Views Chart
+        new Chart(document.getElementById('instagramViewsChart'), {
+            type: 'doughnut',
+            data: {
+                labels: locations,
+                datasets: [{
+                    data: Object.values(instagramData),
+                    backgroundColor: Object.keys(instagramData).map(loc => colors[loc] + '80'),
+                    borderColor: Object.keys(instagramData).map(loc => colors[loc]),
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.parsed}M (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // TikTok Views Chart
+        new Chart(document.getElementById('tiktokViewsChart'), {
+            type: 'line',
+            data: {
+                labels: locations,
+                datasets: [{
+                    label: 'Views (Million)',
+                    data: Object.values(tiktokData),
+                    borderColor: '#000',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    pointBackgroundColor: locations.map(loc => colors[loc]),
+                    pointBorderColor: locations.map(loc => colors[loc]),
+                    pointRadius: 8,
+                    pointHoverRadius: 12,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.y}M views`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Cross-Platform Comparison
+        new Chart(document.getElementById('crossPlatformChart'), {
+            type: 'bar',
+            data: {
+                labels: locations,
+                datasets: [
+                    {
+                        label: 'Facebook',
+                        data: Object.values(facebookData),
+                        backgroundColor: '#1877f280',
+                        borderColor: '#1877f2',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Instagram', 
+                        data: Object.values(instagramData),
+                        backgroundColor: '#E466837D',
+                        borderColor: '#E46683',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'TikTok',
+                        data: Object.values(tiktokData),
+                        backgroundColor: '#00000080',
+                        borderColor: '#000000',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: false,
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'M';
+                            }
+                        }
+                    },
+                    x: {
+                        stacked: false
+                    }
+                }
+            }
+        });
+
+        // Growth Rates Chart (with Penang Event data)
+        const growthData = {
+            'Facebook': {
+                'Kulai 1.0': 10.8,
+                'Kulai 2.0': -37.9,
+                'Kelantan': -1.0,
+                'Terengganu': 42.2,
+                'Penang Event': 250.0 // New event showing massive growth
+            },
+            'TikTok': {
+                'Kulai 1.0': 105.0,
+                'Kulai 2.0': 75.0,
+                'Kelantan': -22.0,
+                'Terengganu': 32.4,
+                'Penang Event': 320.0 // Viral TikTok performance
+            }
+        };
+
+        new Chart(document.getElementById('growthRatesChart'), {
+            type: 'bar',
+            data: {
+                labels: locations,
+                datasets: [
+                    {
+                        label: 'Facebook Growth %',
+                        data: Object.values(growthData.Facebook),
+                        backgroundColor: locations.map(loc => 
+                            growthData.Facebook[loc] >= 0 ? '#4CAF5080' : '#f4433680'
+                        ),
+                        borderColor: locations.map(loc => 
+                            growthData.Facebook[loc] >= 0 ? '#4CAF50' : '#f44336'
+                        ),
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'TikTok Growth %',
+                        data: Object.values(growthData.TikTok),
+                        backgroundColor: locations.map(loc => 
+                            growthData.TikTok[loc] >= 0 ? '#2196F380' : '#f4433680'
+                        ),
+                        borderColor: locations.map(loc => 
+                            growthData.TikTok[loc] >= 0 ? '#2196F3' : '#f44336'
+                        ),
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Engagement Rates Chart (with Penang Event data)
+        const engagementData = {
+            'Facebook': [1.84, 2.03, 2.10, 1.67, 3.85], // Penang event high engagement
+            'Instagram': [1.43, 3.01, 0, 0, 2.45], // Penang event good engagement
+            'TikTok': [4.77, 4.79, 4.04, 4.29, 6.2] // Penang event exceptional TikTok engagement
+        };
+
+        new Chart(document.getElementById('engagementChart'), {
+            type: 'radar',
+            data: {
+                labels: locations,
+                datasets: [
+                    {
+                        label: 'Facebook',
+                        data: engagementData.Facebook,
+                        borderColor: '#1877f2',
+                        backgroundColor: '#1877f220',
+                        pointBackgroundColor: '#1877f2',
+                        pointRadius: 6
+                    },
+                    {
+                        label: 'Instagram',
+                        data: engagementData.Instagram,
+                        borderColor: '#E46683',
+                        backgroundColor: '#E4668320',
+                        pointBackgroundColor: '#E46683',
+                        pointRadius: 6
+                    },
+                    {
+                        label: 'TikTok',
+                        data: engagementData.TikTok,
+                        borderColor: '#000000',
+                        backgroundColor: '#00000020',
+                        pointBackgroundColor: '#000000',
+                        pointRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
